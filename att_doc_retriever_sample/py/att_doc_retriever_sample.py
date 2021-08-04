@@ -3,61 +3,40 @@
 # Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+
 import argparse
+import inspect
 import socket
+import subprocess as sp
 import sys
+import time
 
+from os import path
 
-class VsockStream:
-    """Client"""
-    def __init__(self, conn_tmo=5):
-        self.conn_tmo = conn_tmo
+# import module outside of subtree
+current_dir = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
+vsock_dir = path.join(path.dirname(path.dirname(current_dir)), 'vsock_sample/py')
+sys.path.insert(0, vsock_dir)
+vs = __import__('vsock-sample')
 
-    def connect(self, endpoint):
-        """Connect to the remote endpoint"""
-        self.sock = socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM)
-        self.sock.settimeout(self.conn_tmo)
-        self.sock.connect(endpoint)
-
-    def send_data(self, data):
-        """Send data to the remote endpoint"""
-        self.sock.sendall(data)
-        self.sock.close()
+# Binary executed
+RS_BINARY = './att_doc_retriever_sample/att_doc_retriever_sample'
 
 
 def client_handler(args):
-    client = VsockStream()
+    client = vs.VsockStream()
     endpoint = (args.cid, args.port)
     client.connect(endpoint)
-    msg = 'Hello, world!'
-    client.send_data(msg.encode())
 
+    # Execute binary and send the output to client
+    proc = sp.Popen([RS_BINARY], stdout=sp.PIPE)
+    out, err = proc.communicate()
 
-class VsockListener:
-    """Server"""
-    def __init__(self, conn_backlog=128):
-        self.conn_backlog = conn_backlog
-
-    def bind(self, port):
-        """Bind and listen for connections on the specified port"""
-        self.sock = socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM)
-        self.sock.bind((socket.VMADDR_CID_ANY, port))
-        self.sock.listen(self.conn_backlog)
-
-    def recv_data(self):
-        """Receive data from a remote endpoint"""
-        while True:
-            (from_client, (remote_cid, remote_port)) = self.sock.accept()
-            while True:
-                data = from_client.recv(1024).decode()
-                if not data:
-                    break
-                print(data)
-            from_client.close()
+    client.send_data(out)
 
 
 def server_handler(args):
-    server = VsockListener()
+    server = vs.VsockListener()
     server.bind(args.port)
     server.recv_data()
 
@@ -90,3 +69,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
