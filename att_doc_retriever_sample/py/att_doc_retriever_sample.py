@@ -25,16 +25,16 @@ USER_DATA = 'more stuff'
 RS_BINARY = './att_doc_retriever_sample/att_doc_retriever_sample'
 
 
-def client_handler(args):
-    client = vs.VsockStream()
+def enclave_handler(args):
+    enclave = vs.VsockStream()
     endpoint = (args.cid, args.port)
-    client.connect(endpoint)
+    enclave.connect(endpoint)
 
-    # Execute binary and send the output to client
+    # Execute binary and send the output to server
     proc = sp.Popen([RS_BINARY, PUBLIC_KEY, USER_DATA], stdout=sp.PIPE)
     out, err = proc.communicate()
 
-    client.send_data(out)
+    enclave.send_data(out)
 
 
 def server_handler(args):
@@ -50,11 +50,11 @@ def main():
                         version='%(prog)s 0.1.0')
     subparsers = parser.add_subparsers(title="options")
 
-    client_parser = subparsers.add_parser("client", description="Client",
+    enclave_parser = subparsers.add_parser("enclave", description="Enclave",
                                           help="Connect to a given cid and port.")
-    client_parser.add_argument("cid", type=int, help="The remote endpoint CID.")
-    client_parser.add_argument("port", type=int, help="The remote endpoint port.")
-    client_parser.set_defaults(func=client_handler)
+    enclave_parser.add_argument("cid", type=int, help="The remote endpoint CID.")
+    enclave_parser.add_argument("port", type=int, help="The remote endpoint port.")
+    enclave_parser.set_defaults(func=enclave_handler)
 
     server_parser = subparsers.add_parser("server", description="Server",
                                           help="Listen on a given port.")
