@@ -14,5 +14,5 @@ COPY vsock_sample/py/vsock-sample.py vsock_sample/py/
 
 #    3 is the CID for the parent instance
 # 5010 is the socket port
-CMD ["/usr/local/bin/python3", "att_doc_retriever_sample/att_doc_retriever_sample.py", "client", "3", "5010"]
+CMD ["/usr/local/bin/python3", "att_doc_retriever_sample/att_doc_retriever_sample.py", "enclave", "3", "5010"]
 
