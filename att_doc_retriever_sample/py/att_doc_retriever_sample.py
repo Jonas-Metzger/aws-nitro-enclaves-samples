@@ -20,6 +20,8 @@ sys.path.insert(0, vsock_dir)
 vs = __import__('vsock-sample')
 
 # Binary executed
+KEY_ARG = 'my public key'
+USER_DATA = 'more stuff'
 RS_BINARY = './att_doc_retriever_sample/att_doc_retriever_sample'
 
 
@@ -29,7 +31,7 @@ def client_handler(args):
     client.connect(endpoint)
 
     # Execute binary and send the output to client
-    proc = sp.Popen([RS_BINARY], stdout=sp.PIPE)
+    proc = sp.Popen([RS_BINARY, KEY_ARG, USER_DATA], stdout=sp.PIPE)
     out, err = proc.communicate()
 
     client.send_data(out)
