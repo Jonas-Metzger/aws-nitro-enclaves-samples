@@ -5,10 +5,19 @@ The attestation document is requested from the enclave using a Rust application 
 is called by a python client that sends the results via vsock to a python server that
 runs on the parent instance.
 
-## Build
+## EC2 Instance
+The cheapest supported instance type is c5a.xlarge. See  https://docs.aws.amazon.com/enclaves/latest/user/getting-started.html. We use the 
+AWS Nitro Enclaves Developer AMI (https://aws.amazon.com/marketplace/pp/prodview-37z6ersmwouq2). We require the following commands before we can run the build.sh:
 
-Use the steps from https://docs.aws.amazon.com/enclaves/latest/user/getting-started.html to set up a parent instance that can run
-the generated enclave image.
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh 
+rustup target add x86_64-unknown-linux-musl
+sudo yum install git
+```
+
+Then git clone this repo and proceed.
+
+## Build
 
 Run the `build.sh` script to build the Rust application, the docker container and the enclave image.
 `$ ./build.sh`
