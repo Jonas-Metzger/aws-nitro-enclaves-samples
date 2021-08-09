@@ -10,7 +10,7 @@ The cheapest supported instance type is c5a.xlarge. See  https://docs.aws.amazon
 AWS Nitro Enclaves Developer AMI (https://aws.amazon.com/marketplace/pp/prodview-37z6ersmwouq2). We require the following commands before we can run the build.sh:
 
 ```
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh 
+curl --proto '=https' --tlsv1.2 -sSfy https://sh.rustup.rs | sh 
 rustup target add x86_64-unknown-linux-musl
 sudo yum install git
 ```
