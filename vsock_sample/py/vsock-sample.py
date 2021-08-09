@@ -53,7 +53,6 @@ class VsockListener:
                 if not data:
                     break
                 sys.stdout.write(data)
-                print("received data")
             from_client.close()
 
 
