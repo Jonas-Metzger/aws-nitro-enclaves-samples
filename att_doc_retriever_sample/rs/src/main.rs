@@ -4,11 +4,11 @@ use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    
+
     let nsm_fd = nsm_driver::nsm_init();
 
-    let public_key = ByteBuf::from(args[1]);
-    let user_data = ByteBuf::from(args[2]);
+    let public_key = ByteBuf::from(args[1].as_bytes());
+    let user_data = ByteBuf::from(args[2].as_bytes());
 
     let request = Request::Attestation {
         public_key: Some(public_key),
@@ -21,4 +21,7 @@ fn main() {
 
     nsm_driver::nsm_exit(nsm_fd);
 }
+
+
+
 
