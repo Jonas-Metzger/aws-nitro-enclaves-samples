@@ -52,7 +52,8 @@ class VsockListener:
                 data = from_client.recv(1024).decode()
                 if not data:
                     break
-                print(data)
+                write(sys.stdout, data)
+                print("received data")
             from_client.close()
 
 
