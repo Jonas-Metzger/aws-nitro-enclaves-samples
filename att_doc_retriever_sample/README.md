@@ -11,6 +11,7 @@ AWS Nitro Enclaves Developer AMI (https://aws.amazon.com/marketplace/pp/prodview
 
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh 
+sudo reboot
 rustup target add x86_64-unknown-linux-musl
 sudo yum install git
 ```
